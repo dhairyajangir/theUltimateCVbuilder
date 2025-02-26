@@ -1,6 +1,5 @@
 import React from 'react';
 import { CVData } from '../../types';
-import { formatDate } from '../../utils/dateFormat';
 
 interface TemplateProps {
   data: CVData;

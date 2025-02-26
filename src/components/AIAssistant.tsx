@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ProfessionRequirements } from '../types';
-import { CheckCircle2, ChevronDown, ChevronUp, TrendingUp, AlertCircle, Lightbulb, DollarSign, Book } from 'lucide-react';
+import {  ChevronDown, ChevronUp, TrendingUp, Lightbulb, DollarSign, Book } from 'lucide-react';
 
 interface AIAssistantProps {
   requirements: ProfessionRequirements | null;
