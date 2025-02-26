@@ -47,8 +47,11 @@ export interface SocialLink {
   url: string;
 }
 
+export type TemplateType = 'modern' | 'classic' | 'minimal';
+
 export interface CVData {
-  template: 'modern' | 'classic' | 'minimal' | 'professional' | 'creative';
+  customProfession: string;
+  template: TemplateType;
   profession: string;
   personalInfo: {
     fullName: string;

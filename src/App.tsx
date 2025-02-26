@@ -8,7 +8,14 @@ import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { getProfessionRequirements } from './utils/ai';
 import { exportToPDF } from './utils/pdfExport';
 
+export interface CVFormProps {
+  data: CVData;
+  setData: React.Dispatch<React.SetStateAction<CVData>>;
+  onProfessionChange: (profession: string) => Promise<void>;
+}
+
 const initialData: CVData = {
+  customProfession: '',
   template: 'modern',
   profession: '',
   personalInfo: {
@@ -136,6 +143,11 @@ function AppContent() {
           </div>
         </div>
       </main>
+
+      <div className="fixed bottom-4 right-4 text-gray-600 dark:text-gray-300 text-xs sm:text-sm opacity-70 hover:opacity-100 transition-opacity backdrop-blur-xl bg-white/30 dark:bg-gray-800/30 px-4 py-2 rounded-xl shadow-md border border-white/50 dark:border-gray-700">
+        <strong>© Dhairya Jangir</strong>
+      </div>
+
     </div>
   );
 }

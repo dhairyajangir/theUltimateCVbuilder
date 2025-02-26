@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { CVData } from '../types';
-import { PlusCircle, MinusCircle } from 'lucide-react';
+import { PlusCircle, MinusCircle, Sparkles } from 'lucide-react';
 
 interface CVFormProps {
   data: CVData;
   setData: React.Dispatch<React.SetStateAction<CVData>>;
+  onProfessionChange?: (profession: string) => Promise<void>;
 }
 
-export default function CVForm({ data, setData }: CVFormProps) {
+export default function CVForm({ data, setData, onProfessionChange }: CVFormProps) {
+  const handleProfessionChange = useCallback(async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const profession = e.target.value;
+    setData(prev => ({ ...prev, profession }));
+    if (onProfessionChange) {
+      await onProfessionChange(profession);
+    }
+  }, [setData, onProfessionChange]);
+
+  // Helper function to handle personal info changes
+  const handlePersonalInfoChange = (field: keyof CVData['personalInfo'], value: string) => {
+    setData(prev => ({
+      ...prev,
+      personalInfo: { ...prev.personalInfo, [field]: value }
+    }));
+  };
+
   const addEducation = () => {
     setData(prev => ({
       ...prev,
@@ -16,7 +33,8 @@ export default function CVForm({ data, setData }: CVFormProps) {
         degree: '',
         field: '',
         startDate: '',
-        endDate: ''
+        endDate: '',
+        achievements: []
       }]
     }));
   };
@@ -29,7 +47,10 @@ export default function CVForm({ data, setData }: CVFormProps) {
         position: '',
         startDate: '',
         endDate: '',
-        description: ''
+        description: '',
+        achievements: [],
+        technologies: [],
+        location: ''
       }]
     }));
   };
@@ -37,115 +58,126 @@ export default function CVForm({ data, setData }: CVFormProps) {
   const addSkill = () => {
     setData(prev => ({
       ...prev,
-      skills: [...prev.skills, { name: '', level: 'Beginner' }]
+      skills: [...prev.skills, { name: '', level: 'Beginner', yearsOfExperience: 0, certifications: [] }]
     }));
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <div className="space-y-6">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">Template Selection</h2>
+    <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg transition-all duration-300">
+      <div className="space-y-8">
+        {/* Template Selection */}
+        <section className="space-y-4">
+          <h2 className="text-2xl font-bold text-gray-800">Template Selection</h2>
           <select
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
             value={data.template}
             onChange={(e) => setData(prev => ({ ...prev, template: e.target.value as CVData['template'] }))}
           >
-            <option value="modern">Modern</option>
-            <option value="classic">Classic</option>
-            <option value="minimal">Minimal</option>
+            <option value="modern">Modern Template</option>
+            <option value="classic">Classic Template</option>
+            <option value="minimal">Minimal Template</option>
           </select>
-        </div>
+        </section>
 
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">Profession</h2>
+        {/* Profession Selection */}
+        <section className="space-y-4">
+          <div className="flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-gray-800">Profession</h2>
+            <Sparkles className="w-5 h-5 text-yellow-500" />
+          </div>
           <select
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
             value={data.profession}
-            onChange={(e) => setData(prev => ({ ...prev, profession: e.target.value }))}
+            onChange={handleProfessionChange}
           >
-            <option value="">Select Profession</option>
+            <option value="">Select Your Profession</option>
             <option value="software-engineer">Software Engineer</option>
+            <option value="other">Scientist</option>
+            <option value="other">Physician</option>
+            <option value="other">Doctor</option>
+            <option value="other">Engineer</option>
+            <option value="other">Astronaut</option>
+            <option value="other">Mathematician</option>
+            <option value="other">Chemist</option>
             <option value="designer">Designer</option>
             <option value="marketing">Marketing Professional</option>
             <option value="teacher">Teacher</option>
+            <option value="data-scientist">Data Scientist</option>
+            <option value="product-manager">Product Manager</option>
             <option value="other">Other</option>
           </select>
-        </div>
+          {data.profession === 'other' && (
+            <input
+              type="text"
+              placeholder="Enter your profession"
+              className="w-full p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              value={data.customProfession}
+              onChange={(e) => setData(prev => ({ ...prev, customProfession: e.target.value }))}
+            />
+          )}
+        </section>
 
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">Personal Information</h2>
+        {/* Personal Information */}
+        <section className="space-y-4">
+          <h2 className="text-2xl font-bold text-gray-800">Personal Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Personal Info Fields */}
             <input
               type="text"
               placeholder="Full Name"
-              className="p-2 border rounded"
+              className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               value={data.personalInfo.fullName}
-              onChange={(e) => setData(prev => ({
-                ...prev,
-                personalInfo: { ...prev.personalInfo, fullName: e.target.value }
-              }))}
+              onChange={(e) => handlePersonalInfoChange('fullName', e.target.value)}
             />
             <input
               type="email"
               placeholder="Email"
-              className="p-2 border rounded"
+              className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               value={data.personalInfo.email}
-              onChange={(e) => setData(prev => ({
-                ...prev,
-                personalInfo: { ...prev.personalInfo, email: e.target.value }
-              }))}
+              onChange={(e) => handlePersonalInfoChange('email', e.target.value)}
             />
             <input
               type="tel"
               placeholder="Phone"
-              className="p-2 border rounded"
+              className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               value={data.personalInfo.phone}
-              onChange={(e) => setData(prev => ({
-                ...prev,
-                personalInfo: { ...prev.personalInfo, phone: e.target.value }
-              }))}
+              onChange={(e) => handlePersonalInfoChange('phone', e.target.value)}
             />
             <input
               type="text"
               placeholder="Location"
-              className="p-2 border rounded"
+              className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               value={data.personalInfo.location}
-              onChange={(e) => setData(prev => ({
-                ...prev,
-                personalInfo: { ...prev.personalInfo, location: e.target.value }
-              }))}
+              onChange={(e) => handlePersonalInfoChange('location', e.target.value)}
             />
           </div>
           <textarea
             placeholder="Professional Summary"
-            className="w-full p-2 border rounded mt-4"
+            className="w-full p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
             rows={4}
             value={data.personalInfo.summary}
-            onChange={(e) => setData(prev => ({
-              ...prev,
-              personalInfo: { ...prev.personalInfo, summary: e.target.value }
-            }))}
+            onChange={(e) => handlePersonalInfoChange('summary', e.target.value)}
           />
-        </div>
+        </section>
 
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Education</h2>
+        {/* Education Section */}
+        <section className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-gray-800">Education</h2>
             <button
               onClick={addEducation}
-              className="flex items-center text-blue-600 hover:text-blue-800"
+              className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
             >
-              <PlusCircle className="w-5 h-5 mr-1" /> Add Education
+              <PlusCircle className="w-5 h-5" /> Add Education
             </button>
           </div>
           {data.education.map((edu, index) => (
-            <div key={index} className="p-4 border rounded mb-4">
+            <div key={index} className="p-4 border rounded-lg mb-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
                   type="text"
                   placeholder="Institution"
-                  className="p-2 border rounded"
+                  className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   value={edu.institution}
                   onChange={(e) => {
                     const newEducation = [...data.education];
@@ -156,7 +188,7 @@ export default function CVForm({ data, setData }: CVFormProps) {
                 <input
                   type="text"
                   placeholder="Degree"
-                  className="p-2 border rounded"
+                  className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   value={edu.degree}
                   onChange={(e) => {
                     const newEducation = [...data.education];
@@ -167,7 +199,7 @@ export default function CVForm({ data, setData }: CVFormProps) {
                 <input
                   type="text"
                   placeholder="Field of Study"
-                  className="p-2 border rounded"
+                  className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   value={edu.field}
                   onChange={(e) => {
                     const newEducation = [...data.education];
@@ -179,7 +211,7 @@ export default function CVForm({ data, setData }: CVFormProps) {
                   <input
                     type="date"
                     placeholder="Start Date"
-                    className="p-2 border rounded"
+                    className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     value={edu.startDate}
                     onChange={(e) => {
                       const newEducation = [...data.education];
@@ -190,7 +222,7 @@ export default function CVForm({ data, setData }: CVFormProps) {
                   <input
                     type="date"
                     placeholder="End Date"
-                    className="p-2 border rounded"
+                    className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     value={edu.endDate}
                     onChange={(e) => {
                       const newEducation = [...data.education];
@@ -211,25 +243,26 @@ export default function CVForm({ data, setData }: CVFormProps) {
               </button>
             </div>
           ))}
-        </div>
+        </section>
 
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Experience</h2>
+        {/* Experience Section */}
+        <section className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-gray-800">Experience</h2>
             <button
               onClick={addExperience}
-              className="flex items-center text-blue-600 hover:text-blue-800"
+              className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
             >
-              <PlusCircle className="w-5 h-5 mr-1" /> Add Experience
+              <PlusCircle className="w-5 h-5" /> Add Experience
             </button>
           </div>
           {data.experience.map((exp, index) => (
-            <div key={index} className="p-4 border rounded mb-4">
+            <div key={index} className="p-4 border rounded-lg mb-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
                   type="text"
                   placeholder="Company"
-                  className="p-2 border rounded"
+                  className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   value={exp.company}
                   onChange={(e) => {
                     const newExperience = [...data.experience];
@@ -240,7 +273,7 @@ export default function CVForm({ data, setData }: CVFormProps) {
                 <input
                   type="text"
                   placeholder="Position"
-                  className="p-2 border rounded"
+                  className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   value={exp.position}
                   onChange={(e) => {
                     const newExperience = [...data.experience];
@@ -252,7 +285,7 @@ export default function CVForm({ data, setData }: CVFormProps) {
                   <input
                     type="date"
                     placeholder="Start Date"
-                    className="p-2 border rounded"
+                    className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     value={exp.startDate}
                     onChange={(e) => {
                       const newExperience = [...data.experience];
@@ -263,7 +296,7 @@ export default function CVForm({ data, setData }: CVFormProps) {
                   <input
                     type="date"
                     placeholder="End Date"
-                    className="p-2 border rounded"
+                    className="p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     value={exp.endDate}
                     onChange={(e) => {
                       const newExperience = [...data.experience];
@@ -275,7 +308,7 @@ export default function CVForm({ data, setData }: CVFormProps) {
               </div>
               <textarea
                 placeholder="Description"
-                className="w-full p-2 border rounded mt-4"
+                className="w-full p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 rows={3}
                 value={exp.description}
                 onChange={(e) => {
@@ -295,16 +328,17 @@ export default function CVForm({ data, setData }: CVFormProps) {
               </button>
             </div>
           ))}
-        </div>
+        </section>
 
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Skills</h2>
+        {/* Skills Section */}
+        <section className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold text-gray-800">Skills</h2>
             <button
               onClick={addSkill}
-              className="flex items-center text-blue-600 hover:text-blue-800"
+              className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
             >
-              <PlusCircle className="w-5 h-5 mr-1" /> Add Skill
+              <PlusCircle className="w-5 h-5" /> Add Skill
             </button>
           </div>
           {data.skills.map((skill, index) => (
@@ -312,7 +346,7 @@ export default function CVForm({ data, setData }: CVFormProps) {
               <input
                 type="text"
                 placeholder="Skill"
-                className="flex-1 p-2 border rounded"
+                className="flex-1 p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 value={skill.name}
                 onChange={(e) => {
                   const newSkills = [...data.skills];
@@ -321,7 +355,7 @@ export default function CVForm({ data, setData }: CVFormProps) {
                 }}
               />
               <select
-                className="p-2 border rounded w-40"
+                className="p-3 border rounded-lg w-40 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 value={skill.level}
                 onChange={(e) => {
                   const newSkills = [...data.skills];
@@ -345,7 +379,7 @@ export default function CVForm({ data, setData }: CVFormProps) {
               </button>
             </div>
           ))}
-        </div>
+        </section>
       </div>
     </div>
   );
