@@ -67,15 +67,15 @@ export default function CVForm({ data, setData, onProfessionChange }: CVFormProp
       <div className="space-y-8">
         {/* Template Selection */}
         <section className="space-y-4">
-          <h2 className="text-2xl font-bold text-gray-800">Template Selection</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Choose your template</h2>
           <select
             className="w-full p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
             value={data.template}
             onChange={(e) => setData(prev => ({ ...prev, template: e.target.value as CVData['template'] }))}
           >
-            <option value="modern">Modern Template</option>
-            <option value="classic">Classic Template</option>
-            <option value="minimal">Minimal Template</option>
+            <option value="modern">Modern</option>
+            <option value="classic">Classic</option>
+            <option value="minimal">Minimal</option>
           </select>
         </section>
 
