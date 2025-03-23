@@ -22,4 +22,4 @@ The Ultimate AI-Powered Resume Builder App is a cutting-edge, dynamic applicatio
   - Real-time preview functionality so users can instantly see how their resume is coming together.
   - PDF download capability for a polished, shareable resume.
  
-**Visit-- ultimatecv.netlify.app**
+**Visit**-- ultimatecv.netlify.app
