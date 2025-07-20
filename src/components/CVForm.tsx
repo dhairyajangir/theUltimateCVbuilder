@@ -83,7 +83,7 @@ export default function CVForm({ data, setData, onProfessionChange }: CVFormProp
         <section className="space-y-4">
           <div className="flex items-center gap-2">
             <h2 className="text-2xl font-bold text-gray-800">Profession</h2>
-            <Sparkles className="w-5 h-5 text-yellow-500" />
+            {/* <Sparkles className="w-5 h-5 text-yellow-500" /> */}
           </div>
           <select
             className="w-full p-3 border rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
@@ -92,13 +92,13 @@ export default function CVForm({ data, setData, onProfessionChange }: CVFormProp
           >
             <option value="">Select Your Profession</option>
             <option value="software-engineer">Software Engineer</option>
-            <option value="other">Scientist</option>
-            <option value="other">Physician</option>
-            <option value="other">Doctor</option>
-            <option value="other">Engineer</option>
-            <option value="other">Astronaut</option>
-            <option value="other">Mathematician</option>
-            <option value="other">Chemist</option>
+            <option value="scientist">Scientist</option>
+            <option value="physician">Physician</option>
+            <option value="doctor">Doctor</option>
+            <option value="engineer">Engineer</option>
+            <option value="astronaut">Astronaut</option>
+            <option value="mathematician">Mathematician</option>
+            <option value="chemist">Chemist</option>
             <option value="designer">Designer</option>
             <option value="marketing">Marketing Professional</option>
             <option value="teacher">Teacher</option>

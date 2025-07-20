@@ -1,11 +1,27 @@
-export interface Education {
-  institution: string;
-  degree: string;
-  field: string;
-  startDate: string;
-  endDate: string;
-  achievements: string[];
-  gpa?: string;
+export interface CVData {
+  customProfession: string;
+  template: 'modern' | 'classic' | 'minimal';
+  profession: string;
+  personalInfo: {
+    fullName: string;
+    email: string;
+    phone: string;
+    location: string;
+    summary: string;
+    title: string;
+    socialLinks: string[];
+    profilePicture: string;
+  };
+  education: Education[];
+  experience: Experience[];
+  skills: Skill[];
+  languages: Language[];
+  projects: Project[];
+  awards: Award[];
+  certifications: Certification[];
+  volunteer: Volunteer[];
+  publications: Publication[];
+  references: Reference[];
 }
 
 export interface Experience {
@@ -19,6 +35,16 @@ export interface Experience {
   location: string;
 }
 
+export interface Education {
+  institution: string;
+  degree: string;
+  field: string;
+  startDate: string;
+  endDate: string;
+  achievements: string[];
+  gpa?: string;
+}
+
 export interface Skill {
   name: string;
   level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
@@ -26,82 +52,58 @@ export interface Skill {
   certifications: string[];
 }
 
-export interface Project {
+export interface Language {
   name: string;
+  proficiency: string;
+}
+
+export interface Project {
+  title: string;
   description: string;
-  technologies: string[];
-  link?: string;
   startDate: string;
   endDate: string;
   achievements: string[];
+  technologies: string[];
+  link?: string;
 }
 
-export interface Language {
+export interface Award {
+  title: string;
+  issuer: string;
+  date: string;
+  description: string;
+}
+
+export interface Certification {
   name: string;
-  proficiency: 'Basic' | 'Intermediate' | 'Advanced' | 'Native' | 'Professional';
-  certification?: string;
+  issuer: string;
+  date: string;
+  expiryDate?: string;
+  credentialId?: string;
 }
 
-export interface SocialLink {
-  platform: 'LinkedIn' | 'GitHub' | 'Portfolio' | 'Twitter' | 'Other';
-  url: string;
+export interface Volunteer {
+  organization: string;
+  role: string;
+  startDate: string;
+  endDate: string;
+  description: string;
 }
 
-export type TemplateType = 'modern' | 'classic' | 'minimal';
+export interface Publication {
+  title: string;
+  publisher: string;
+  date: string;
+  description: string;
+  link?: string;
+}
 
-export interface CVData {
-  customProfession: string;
-  template: TemplateType;
-  profession: string;
-  personalInfo: {
-    fullName: string;
-    email: string;
-    phone: string;
-    location: string;
-    summary: string;
-    title: string;
-    photo?: string;
-    socialLinks: SocialLink[];
-  };
-  education: Education[];
-  experience: Experience[];
-  skills: Skill[];
-  languages: Language[];
-  projects: Project[];
-  awards: {
-    title: string;
-    issuer: string;
-    date: string;
-    description: string;
-  }[];
-  certifications: {
-    name: string;
-    issuer: string;
-    date: string;
-    expiryDate?: string;
-    credentialId?: string;
-  }[];
-  volunteer: {
-    organization: string;
-    role: string;
-    startDate: string;
-    endDate: string;
-    description: string;
-  }[];
-  publications: {
-    title: string;
-    publisher: string;
-    date: string;
-    link?: string;
-    description: string;
-  }[];
-  references: {
-    name: string;
-    position: string;
-    company: string;
-    email: string;
-    phone: string;
-  }[];
+export interface Reference {
+  name: string;
+  position: string;
+  company: string;
+  email: string;
+  phone: string;
 }
 
 export interface ProfessionRequirements {
@@ -130,9 +132,9 @@ export interface ProfessionRequirements {
   };
   keyTechnologies: string[];
   softSkills: string[];
-  recommendedCourses: {
+  recommendedCourses: Array<{
     name: string;
     provider: string;
     level: string;
-  }[];
+  }>;
 }
