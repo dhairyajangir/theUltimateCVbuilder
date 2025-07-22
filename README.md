@@ -1,3 +1,3 @@
-<h1> Ultimate AI-Powered Resume Builder App </h1>
+# Ultimate AI-Powered Resume Builder App
 
-**get the pro version for free, visit --> [theUltimateCV]([url](https://ultimatecv.netlify.app))**
+**Get the Pro version for free, visit → [theUltimateCV](https://ultimatecv.netlify.app)**
