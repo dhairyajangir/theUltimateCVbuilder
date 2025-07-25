@@ -23,6 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-/.node_modules
-/.env
-/.next
+node_modules
+.env
+.env.local
+.env.development.local
