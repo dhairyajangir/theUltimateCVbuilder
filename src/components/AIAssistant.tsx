@@ -79,7 +79,6 @@ export default function AIAssistant({ requirements, isLoading, data, setData }: 
 
   const calculateCompletionScore = () => {
     let score = 0;
-    const maxScore = 100;
     
     // Basic info (30%)
     if (data.personalInfo.fullName) score += 10;
@@ -107,24 +106,26 @@ export default function AIAssistant({ requirements, isLoading, data, setData }: 
   const applySuggestion = (type: string) => {
     switch (type) {
       case 'summary':
-        if (requirements?.summary) {
-          setData(prev => ({
-            ...prev,
-            personalInfo: {
-              ...prev.personalInfo,
-              summary: requirements.summary
-            }
-          }));
-        }
+        setData(prev => ({
+          ...prev,
+          personalInfo: {
+            ...prev.personalInfo,
+            summary: requirements?.summary ?? ''
+          }
+        }));
         break;
       case 'skills':
-        if (requirements?.skills) {
-          const newSkills = requirements.skills.slice(0, 5).map(skill => ({
-            name: skill,
-            level: 'Intermediate' as const,
-            yearsOfExperience: 2,
-            certifications: []
-          }));
+        if (requirements?.atsKeywords) {
+          // Get current skill names to avoid duplicates
+          const currentSkillNames = new Set(data.skills.map(s => s.name));
+          const newSkills = requirements.atsKeywords
+            .filter(keyword => !currentSkillNames.has(keyword))
+            .map(keyword => ({
+              name: keyword,
+              level: 'Intermediate' as const,
+              yearsOfExperience: 1,
+              certifications: []
+            }));
           setData(prev => ({
             ...prev,
             skills: [...prev.skills, ...newSkills]
@@ -207,22 +208,33 @@ export default function AIAssistant({ requirements, isLoading, data, setData }: 
           defaultOpen={true}
         >
           <div className="mt-3">
-            <div className="flex flex-wrap gap-2 mb-3">
-              {requirements.skills?.slice(0, 8).map((skill, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-sm rounded-full"
-                >
-                  {skill}
-                </span>
-              ))}
+            <div className="flex flex-wrap gap-2 mb-4">
+              {requirements.atsKeywords?.slice(0, 15).map((keyword, index) => {
+                // Check if the keyword is present in the user's skills list
+                const isPresent = data.skills.some(skill => skill.name.toLowerCase() === keyword.toLowerCase());
+                return (
+                  <span
+                    key={index}
+                    className={`px-3 py-1 text-sm rounded-full transition-all ${
+                      isPresent
+                        ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 ring-1 ring-green-300'
+                        : 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200'
+                    }`}
+                  >
+                    {keyword}
+                  </span>
+                );
+              })}
             </div>
             <button
               onClick={() => applySuggestion('skills')}
-              className="text-sm bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition-colors"
+              className="text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full"
             >
-              Add to Profile
+              Add Missing Skills to Profile
             </button>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+              <span className="inline-block w-2.5 h-2.5 bg-green-200 rounded-full mr-1"></span> Present in your CV
+            </p>
           </div>
         </CollapsibleSection>
 

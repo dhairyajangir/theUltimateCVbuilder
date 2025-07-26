@@ -10,49 +10,38 @@ export async function getProfessionRequirements(
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
     const prompt = `
-You are a career advisor AI.
-Given the profession: "${profession}",
-generate and return only a valid JSON object (no markdown, no extra text, no comments).
-Use double quotes for all keys and string values.
-Structure as follows:
+You are an expert career advisor and resume writer with deep knowledge of Applicant Tracking Systems (ATS).
+For the profession "${profession}", generate a JSON object with the following structure. Use camelCase for keys and double quotes for all keys and string values.
+
 {
-  "skills": ["required technical and soft skills"],
-  "education": ["recommended education paths"],
-  "experience": ["key experience requirements"],
-  "summary": "professional summary template",
-  "certifications": ["relevant professional certifications"],
-  "projectIdeas": ["portfolio project ideas relevant to the role"],
-  "careerPath": {
-    "entry": ["entry-level positions and requirements"],
-    "mid": ["mid-level career steps"],
-    "senior": ["senior-level expectations"],
-    "expert": ["expert/leadership requirements"]
+  "atsKeywords": [
+    "A list of 10-15 essential ATS keywords, including technical skills, soft skills, and industry jargon."
+  ],
+  "summary": "A 3-4 sentence professional summary template, optimized with keywords.",
+  "certifications": ["A list of 3-5 highly-regarded professional certifications."],
+  "salaryRange": {
+    "entry": "Entry-level salary range in USD, e.g., '$60,000 - $80,000'",
+    "mid": "Mid-level salary range in USD",
+    "senior": "Senior-level salary range in USD",
+    "expert": "Expert-level salary range in USD"
   },
   "industryInsights": {
-    "trends": ["current industry trends"],
-    "challenges": ["common challenges in this role"],
-    "opportunities": ["growth opportunities"]
+    "trends": ["List of 3-4 current industry trends."],
+    "challenges": ["List of 2-3 common challenges in this role."],
+    "opportunities": ["List of 2-3 growth opportunities."]
   },
-  "salaryRange": {
-    "entry": "entry-level salary range in USD",
-    "mid": "mid-level salary range in USD",
-    "senior": "senior-level salary range in USD",
-    "expert": "expert-level salary range in USD"
-  },
-  "keyTechnologies": ["essential technologies and tools"],
-  "softSkills": ["important soft skills"],
   "recommendedCourses": [
     {
-      "name": "course name",
-      "provider": "course provider",
-      "level": "difficulty level"
+      "name": "Course name, e.g., 'Advanced Python for Data Science'",
+      "provider": "Course provider, e.g., 'Coursera'",
+      "level": "Difficulty level, e.g., 'Intermediate'"
     }
-  ]
+  ],
+  "projectIdeas": ["Three innovative portfolio project ideas that would impress a hiring manager."]
 }
+
 RESPONSE RULES:
-- Output ONLY the raw JSON object described above, nothing else.
-- Do NOT include any extra text, explanations, or formatting.
-- Do NOT use markdown or code block formatting.
+- Output ONLY the raw JSON object. Do not include any extra text, explanations, or markdown formatting.
 `;
 
     const result = await model.generateContent(prompt);
@@ -79,18 +68,10 @@ RESPONSE RULES:
     console.error('Error parsing AI response:', error);
     // Return safe fallback to not crash your UI
     return {
-      skills: [],
-      education: [],
-      experience: [],
+      atsKeywords: [],
       summary: '',
       certifications: [],
       projectIdeas: [],
-      careerPath: {
-        entry: [],
-        mid: [],
-        senior: [],
-        expert: []
-      },
       industryInsights: {
         trends: [],
         challenges: [],
@@ -102,8 +83,6 @@ RESPONSE RULES:
         senior: '',
         expert: ''
       },
-      keyTechnologies: [],
-      softSkills: [],
       recommendedCourses: []
     };
   }

@@ -107,34 +107,36 @@ export interface Reference {
 }
 
 export interface ProfessionRequirements {
-  skills: string[];
-  education: string[];
-  experience: string[];
-  summary: string;
-  certifications: string[];
-  projectIdeas: string[];
-  careerPath: {
-    entry: string[];
-    mid: string[];
-    senior: string[];
-    expert: string[];
-  };
-  industryInsights: {
-    trends: string[];
-    challenges: string[];
-    opportunities: string[];
-  };
-  salaryRange: {
-    entry: string;
-    mid: string;
-    senior: string;
-    expert: string;
-  };
-  keyTechnologies: string[];
-  softSkills: string[];
-  recommendedCourses: Array<{
-    name: string;
-    provider: string;
-    level: string;
-  }>;
+atsKeywords?: string[];
+summary?: string;
+certifications?: string[];
+projectIdeas?: string[];
+industryInsights?: {
+  trends: string[];
+  challenges: string[];
+  opportunities: string[];
+};
+salaryRange?: {
+  entry: string;
+  mid: string;
+  senior: string;
+  expert: string;
+};
+recommendedCourses?: Array<{
+  name: string;
+  provider: string;
+  level: string;
+}>;
+// Deprecated fields from the old structure, can be removed if not used elsewhere
+skills?: string[];
+education?: string[];
+experience?: string[];
+careerPath?: {
+  entry: string[];
+  mid: string[];
+  senior: string[];
+  expert: string[];
+};
+keyTechnologies?: string[];
+softSkills?: string[];
 }

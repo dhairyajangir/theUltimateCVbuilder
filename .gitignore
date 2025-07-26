@@ -27,3 +27,5 @@ node_modules
 .env
 .env.local
 .env.development.local
+package-lock.json
+yarn.lock

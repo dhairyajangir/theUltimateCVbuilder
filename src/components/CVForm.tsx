@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { CVData } from '../types';
-import { PlusCircle, MinusCircle, Sparkles } from 'lucide-react';
+import { PlusCircle, MinusCircle} from 'lucide-react';
 
 interface CVFormProps {
   data: CVData;
