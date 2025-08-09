@@ -38,6 +38,15 @@ export async function exportToPDF(elementId: string, filename: string = 'resume.
       (section as HTMLElement).style.marginBottom = '20px';
     });
     
+    // Ensure profile picture retains aspect ratio
+    const profilePicture = clone.querySelector('img[alt="Profile"]');
+    if (profilePicture) {
+      (profilePicture as HTMLElement).style.width = '100px';
+      (profilePicture as HTMLElement).style.height = '100px';
+      (profilePicture as HTMLElement).style.objectFit = 'cover';
+      (profilePicture as HTMLElement).style.borderRadius = '50%';
+    }
+
     // Temporarily append clone to document for rendering
     clone.style.position = 'absolute';
     clone.style.left = '-9999px';
@@ -144,12 +153,12 @@ const ModernTemplate: React.FC<CVPreviewProps> = ({ data }) => (
         {data.personalInfo.socialLinks.map((link, index) => (
           <a
             key={index}
-            href={link.url}
+            href={link}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 hover:text-blue-800"
           >
-            {link.platform}
+            {link}
           </a>
         ))}
       </div>

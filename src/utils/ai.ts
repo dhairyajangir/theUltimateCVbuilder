@@ -1,3 +1,36 @@
+// Get grammar correction and suggestion for a single field
+export async function getFieldSuggestions(field: string, value: string): Promise<{ suggestion: string }> {
+  try {
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const prompt = `You are a resume writing assistant. For the field "${field}", the user entered: "${value}".\n
+If there are any grammar or spelling mistakes, correct them. If the sentence can be improved, rewrite it in a more professional and concise way.\n
+Respond with only the improved/corrected sentence. If the input is already good, return it as is. Do not include any extra text or explanation.`;
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    let text = await response.text();
+    text = text.trim().replace(/^"|"$/g, '');
+    return { suggestion: text };
+  } catch (error) {
+    return { suggestion: value };
+  }
+}
+
+// Get a live ATS score (0-100) for the current CV data
+export async function getLiveATSScore(cvData: any): Promise<number> {
+  try {
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const prompt = `You are an ATS (Applicant Tracking System) scoring engine. Given the following CV data as JSON, return a single integer score from 0 to 100 representing how well this CV would perform for ATS screening.\n
+CV Data: ${JSON.stringify(cvData)}\n
+Respond with only the integer score. Do not include any extra text or explanation.`;
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    let text = await response.text();
+    const score = parseInt(text.match(/\d+/)?.[0] || '0', 10);
+    return Math.max(0, Math.min(100, score));
+  } catch (error) {
+    return 0;
+  }
+}
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ProfessionRequirements } from '../types';
 

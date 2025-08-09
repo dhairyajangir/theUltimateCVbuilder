@@ -1,4 +1,5 @@
 export interface CVData {
+  contact: any;
   customProfession: string;
   template: 'modern' | 'classic' | 'minimal';
   profession: string;
@@ -25,6 +26,7 @@ export interface CVData {
 }
 
 export interface Experience {
+  role: string | number | readonly string[] | undefined;
   company: string;
   position: string;
   startDate: string;
@@ -58,6 +60,7 @@ export interface Language {
 }
 
 export interface Project {
+  name: string | number | readonly string[] | undefined;
   title: string;
   description: string;
   startDate: string;

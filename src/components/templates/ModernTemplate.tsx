@@ -9,35 +9,35 @@ interface TemplateProps {
 
 export const ModernTemplate: React.FC<TemplateProps> = ({ data }) => {
   return (
-    <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-200">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-700 to-purple-600 text-white p-8 md:flex md:items-center md:space-x-6">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-500 text-white p-10 flex flex-col md:flex-row md:items-center md:space-x-8">
         {data.personalInfo.profilePicture && (
           <img
             src={data.personalInfo.profilePicture}
             alt="Profile"
-            className="w-28 h-28 rounded-full border-4 border-white object-cover mx-auto md:mx-0"
+            className="w-32 h-32 rounded-full border-4 border-white object-cover mx-auto md:mx-0 shadow-lg"
           />
         )}
-        <div className="text-center md:text-left mt-4 md:mt-0">
-          <h1 className="text-4xl font-extrabold">{data.personalInfo.fullName || 'Your Name'}</h1>
-          <p className="text-lg text-blue-100">{data.profession || data.customProfession || data.personalInfo.title || 'Your Profession'}</p>
+        <div className="text-center md:text-left mt-6 md:mt-0">
+          <h1 className="text-5xl font-extrabold tracking-tight">{data.personalInfo.fullName || 'Your Name'}</h1>
+          <p className="text-lg text-blue-200 mt-2">{data.profession || data.customProfession || data.personalInfo.title || 'Your Profession'}</p>
           <div className="mt-4 flex flex-wrap justify-center md:justify-start gap-4 text-sm text-blue-100">
             {data.personalInfo.email && (
               <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4" />
+                <Mail className="w-5 h-5" />
                 <span>{data.personalInfo.email}</span>
               </div>
             )}
             {data.personalInfo.phone && (
               <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4" />
+                <Phone className="w-5 h-5" />
                 <span>{data.personalInfo.phone}</span>
               </div>
             )}
             {data.personalInfo.location && (
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
+                <MapPin className="w-5 h-5" />
                 <span>{data.personalInfo.location}</span>
               </div>
             )}
@@ -45,11 +45,11 @@ export const ModernTemplate: React.FC<TemplateProps> = ({ data }) => {
         </div>
       </div>
 
-      <div className="p-8 space-y-12">
+      <div className="p-10 space-y-12">
         {/* Summary */}
         {data.personalInfo.summary && (
           <Section title="Professional Summary">
-            <p className="text-gray-700 leading-relaxed">{data.personalInfo.summary}</p>
+            <p className="text-gray-700 leading-relaxed text-lg">{data.personalInfo.summary}</p>
           </Section>
         )}
 
@@ -57,8 +57,8 @@ export const ModernTemplate: React.FC<TemplateProps> = ({ data }) => {
         {data.experience.length > 0 && (
           <Section title="Experience">
             {data.experience.map((exp, index) => (
-              <div key={index} className="relative pl-6 border-l-2 border-blue-500 space-y-2">
-                <div className="absolute -left-2 top-1.5 w-4 h-4 bg-blue-500 rounded-full" />
+              <div key={index} className="relative pl-8 border-l-4 border-blue-500 space-y-2">
+                <div className="absolute -left-4 top-2 w-6 h-6 bg-blue-500 rounded-full" />
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center">
                   <div>
                     <h4 className="text-xl font-semibold text-gray-800">{exp.position}</h4>
@@ -66,11 +66,11 @@ export const ModernTemplate: React.FC<TemplateProps> = ({ data }) => {
                     {exp.location && <p className="text-gray-600 text-sm">{exp.location}</p>}
                   </div>
                   <div className="text-sm text-gray-600 flex items-center gap-2 mt-2 md:mt-0">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-5 h-5" />
                     <span>{formatDate(exp.startDate)} - {exp.endDate ? formatDate(exp.endDate) : 'Present'}</span>
                   </div>
                 </div>
-                {exp.description && <p className="text-gray-700">{exp.description}</p>}
+                {exp.description && <p className="text-gray-700 text-base">{exp.description}</p>}
                 {exp.achievements.length > 0 && (
                   <ul className="list-disc list-inside text-gray-700">
                     {exp.achievements.map((item, idx) => (
@@ -111,10 +111,10 @@ export const ModernTemplate: React.FC<TemplateProps> = ({ data }) => {
         {/* Skills */}
         {data.skills.length > 0 && (
           <Section title="Skills">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {data.skills.map((skill, index) => (
-                <div key={index} className="bg-gray-50 border rounded-lg p-4 shadow-sm">
-                  <h4 className="font-semibold text-gray-800">{skill.name}</h4>
+                <div key={index} className="bg-gray-50 border rounded-lg p-6 shadow-md">
+                  <h4 className="font-semibold text-gray-800 text-lg">{skill.name}</h4>
                   <div className="flex justify-between text-sm text-gray-600 mt-1">
                     <span>{skill.level}</span>
                     <span>{skill.yearsOfExperience} yrs</span>
@@ -135,14 +135,14 @@ export const ModernTemplate: React.FC<TemplateProps> = ({ data }) => {
         {data.projects.length > 0 && (
           <Section title="Projects">
             {data.projects.map((project, index) => (
-              <div key={index} className="p-6 border rounded-lg shadow-sm space-y-2">
+              <div key={index} className="p-6 border rounded-lg shadow-md space-y-2">
                 <div className="flex justify-between items-center">
                   <h4 className="text-xl font-semibold text-gray-800">{project.title}</h4>
                   <span className="text-sm text-gray-600">
                     {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
                   </span>
                 </div>
-                <p className="text-gray-700">{project.description}</p>
+                <p className="text-gray-700 text-base">{project.description}</p>
                 {project.technologies && project.technologies.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {project.technologies.map((tech, idx) => (

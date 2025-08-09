@@ -8,15 +8,8 @@ import { exportToPDF } from './utils/pdfExport';
 import { ModernTemplate } from './components/templates/ModernTemplate';
 import { ClassicTemplate } from './components/templates/ClassicTemplate';
 import { MinimalTemplate } from './components/templates/MinimalTemplate';
-import AIAssistant from './components/AIAssistant';
-import ImageUpload from './components/ImageUpload';
+// import AIAssistant from './components/AIAssistant';
 import ErrorBoundary from './components/ErrorBoundary';
-
-export interface CVFormProps {
-  data: CVData;
-  setData: React.Dispatch<React.SetStateAction<CVData>>;
-  onProfessionChange: (profession: string) => Promise<void>;
-}
 
 const initialData: CVData = {
   customProfession: '',
@@ -31,6 +24,10 @@ const initialData: CVData = {
     title: '',
     socialLinks: [],
     profilePicture: ''
+  },
+  contact: {
+    email: '',
+    phone: ''
   },
   education: [],
   experience: [],
@@ -73,11 +70,13 @@ function AppContent() {
     }
   }, []);
 
+  // If exportToPDF expects an element id (string)
   const handleExportPDF = async () => {
-    if (!previewRef.current) return;
+    if (!document.getElementById('cv-preview')) return;
     setIsExporting(true);
     try {
-      const filename = `${data.personalInfo.fullName.toLowerCase().replace(/\s+/g, '-') || 'resume'}.pdf`;
+      const fullName = data.personalInfo.fullName?.trim() || '';
+      const filename = `${fullName ? fullName.toLowerCase().replace(/\s+/g, '-') : 'resume'}.pdf`;
       await exportToPDF('cv-preview', filename);
     } catch (error) {
       console.error('Error exporting PDF:', error);
@@ -86,6 +85,22 @@ function AppContent() {
       setIsExporting(false);
     }
   };
+
+  // If your exportToPDF expects an HTMLElement instead, use this version and update the util signature:
+  // const handleExportPDF = async () => {
+  //   if (!previewRef.current) return;
+  //   setIsExporting(true);
+  //   try {
+  //     const fullName = data.personalInfo.fullName?.trim() || '';
+  //     const filename = `${fullName ? fullName.toLowerCase().replace(/\s+/g, '-') : 'resume'}.pdf`;
+  //     await exportToPDF(previewRef.current, filename);
+  //   } catch (error) {
+  //     console.error('Error exporting PDF:', error);
+  //     alert('Failed to export PDF. Please try again.');
+  //   } finally {
+  //     setIsExporting(false);
+  //   }
+  // };
 
   const renderTemplate = () => {
     const templateProps = { data };
@@ -101,10 +116,10 @@ function AppContent() {
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:to-gray-950 transition-colors duration-300`}>
+    <div className="min-h-screen min-w-full w-full h-full bg-gradient-to-br from-neutral-50 to-neutral-200 dark:from-neutral-900 dark:to-neutral-950 transition-colors duration-300 flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <header className="sticky top-0 z-40 w-full border-b border-neutral-200 dark:border-neutral-700">
+        <div className="w-full px-2 sm:px-6 lg:px-12 py-4 flex items-center justify-between bg-gradient-to-br from-neutral-50 to-neutral-200 dark:from-neutral-900 dark:to-neutral-950">
           <div className="flex items-center space-x-3">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white tracking-tight">theUltimateCV</h1>
             <span className="px-2 py-0.5 text-xs bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-100 rounded-full font-medium shadow-sm">Pro</span>
@@ -112,36 +127,48 @@ function AppContent() {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+              className="p-2 rounded-lg bg-white/80 dark:bg-neutral-800/80 hover:bg-white dark:hover:bg-neutral-700 transition-all shadow-sm border border-neutral-200 dark:border-neutral-600 text-neutral-700 dark:text-neutral-200"
               aria-label="Toggle Theme"
             >
               {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
             </button>
 
-            <button
-              onClick={() => setView(view === 'form' ? 'preview' : 'form')}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition shadow"
-            >
-              {view === 'form' ? <><Eye className="w-4 h-4" /> Preview</> : <><Edit3 className="w-4 h-4" /> Edit</>}
-            </button>
+            {view === 'form' && (
+              <button
+                onClick={() => setView('preview')}
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all shadow-sm border border-primary-700"
+              >
+                <Eye className="w-4 h-4" /> Preview
+              </button>
+            )}
 
-            <button
-              onClick={handleExportPDF}
-              disabled={isExporting || !data.personalInfo.fullName}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 transition shadow"
-            >
-              {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
-              Export
-            </button>
+            {view === 'preview' && (
+              <>
+                <button
+                  onClick={handleExportPDF}
+                  disabled={isExporting || !data.personalInfo.fullName}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-all shadow-sm border border-green-700"
+                >
+                  {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
+                  Export
+                </button>
+                <button
+                  onClick={() => setView('form')}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all shadow-sm border border-primary-700"
+                >
+                  <Edit3 className="w-4 h-4" /> Edit
+                </button>
+              </>
+            )}
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <main className="flex-1 w-full px-2 sm:px-6 lg:px-12 py-6 sm:py-10 flex flex-col">
         {view === 'form' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
-            <div className="lg:col-span-2">
+          <div className="flex flex-col lg:flex-row gap-8 w-full h-full">
+            <div className="w-full lg:w-2/3 flex-shrink-0 flex-grow">
               <ErrorBoundary>
                 <CVForm
                   data={data}
@@ -150,18 +177,7 @@ function AppContent() {
                 />
               </ErrorBoundary>
             </div>
-            <div className="lg:col-span-1 space-y-6">
-              <ErrorBoundary>
-                <ImageUpload
-                  profilePicture={data.personalInfo.profilePicture}
-                  setProfilePicture={(url) =>
-                    setData(prev => ({
-                      ...prev,
-                      personalInfo: { ...prev.personalInfo, profilePicture: url }
-                    }))
-                  }
-                />
-              </ErrorBoundary>
+            {/* <div className="w-full lg:w-1/3 flex flex-col gap-6">
               {showAI && (
                 <ErrorBoundary>
                   <AIAssistant
@@ -172,14 +188,14 @@ function AppContent() {
                   />
                 </ErrorBoundary>
               )}
-            </div>
+            </div> */}
           </div>
         ) : (
-          <div className="max-w-5xl mx-auto">
+          <div className="flex flex-col items-center w-full h-full">
             <div
               id="cv-preview"
               ref={previewRef}
-              className="rounded-xl overflow-hidden shadow-2xl bg-white print:shadow-none print:rounded-none"
+              className="w-full max-w-6xl rounded-xl overflow-hidden shadow-2xl bg-white print:shadow-none print:rounded-none"
             >
               <ErrorBoundary>
                 {renderTemplate()}
@@ -190,7 +206,7 @@ function AppContent() {
       </main>
 
       {/* Floating Footer */}
-      <div className="fixed bottom-5 right-5 backdrop-blur-sm bg-white/70 dark:bg-gray-800/70 text-xs sm:text-sm px-4 py-2 rounded-lg shadow-lg border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300">
+      <div className="fixed bottom-5 right-5 backdrop-blur-sm bg-white/70 dark:bg-neutral-800/70 text-xs sm:text-sm px-4 py-2 rounded-lg shadow-lg border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300">
         <strong>© Dhairya Jangir</strong>
       </div>
     </div>

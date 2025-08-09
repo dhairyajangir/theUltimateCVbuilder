@@ -1,3 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+	font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+	background: linear-gradient(135deg, #f4f6f8 0%, #e3f2fd 100%);
+	min-height: 100%;
+	scroll-behavior: smooth;
+}
+
+body {
+	color: #1f2937;
+	background: transparent;
+	min-height: 100vh;
+	font-feature-settings: "cv11", "ss01";
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	transition: background 0.3s, color 0.3s;
+}
+
+.dark html {
+	background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
+}
+
+.dark body {
+	color: #f4f6f8;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+	background: #e5e8eb;
+}
+::-webkit-scrollbar-thumb {
+	background: #b0b8c1;
+	border-radius: 8px;
+}
+
+input, textarea, select, button {
+	font-family: inherit;
+	outline: none;
+	transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+a {
+	color: theme('colors.primary.600');
+	text-decoration: none;
+	transition: color 0.2s;
+}
+a:hover {
+	color: theme('colors.primary.800');
+}
+
+button {
+  background-color: var(--button-bg-light, #f3f4f6); /* Fallback for light mode */
+}

@@ -19,6 +19,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     localStorage.setItem('theme', theme);
     document.documentElement.classList.toggle('dark', theme === 'dark');
+
+    // Ensure light mode has a visible background color for buttons
+    if (theme === 'light') {
+      document.documentElement.style.setProperty('--button-bg-light', '#f3f4f6'); // Light gray
+    } else {
+      document.documentElement.style.removeProperty('--button-bg-light');
+    }
   }, [theme]);
 
   const toggleTheme = () => {
